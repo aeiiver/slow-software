@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="about:blank">
+    <title>I need a name</title>
+    <style>
+:root {
+  color-scheme: light dark;
+}
+
+body,
+h1, h2, h3,
+p {
+  margin: 0;
+  line-height: 2;
+}
+
+.wrapper {
+  width: 50%;
+  margin-block: 2rem;
+
+  @media (max-width: 1280px) {
+    width: 70%;
+  }
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+}
+    </style>
+  </head>
+  <!--
+    I am so sorry for this mess of a code. You know that software is slow, so
+    this shouldn't surprise you. Single-page applications are kind of whack,
+    but hey that's what the cool kids do nowadays.
+  -->
+  <body style="display: flex; justify-content: center; font-family: monospace; font-size: 16px;">
+    <div class="wrapper">
+      <header>
+        <h1 style="margin-block-end: 1.5rem;">Slow software</h1>
+      </header>
+      <main style="display: flex; flex-direction: column; gap: 1.5rem;" x-data="{name: '', perms: [''], words: ['']}">
+        <p>I know you like slow software. This page will help you feel it yet
+        again. <strong>Whatever you enter in the following input field might
+          kill the browser tab,</strong> especially if it's more than 8 characters.
+        In case the browser freezes so badly, just close it.</p>
+        <div style="display: flex">
+          <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+            <label for="name">Search word</label>
+            <input style="padding: 0.25rem; margin-block-end: 0.25rem;" id="name" type="text" x-model="name" x-on.debounce.420ms:input="[perms, words] = permute($event.target.value);">
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <div>
+            <h3 style="display: inline;">Dictionary matches</h3
+            > (<span x-text="words[0] === '' ? 0 : words.length"></span>)
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <template x-if="words[0] === ''">
+              <div>No input</div>
+            </template>
+            <template x-if="words.length === 0">
+              <div>No matches</div>
+            </template>
+            <template x-for="n in words">
+              <div><span x-text="n"></span></div>
+            </template>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <div>
+            <h3 style="display: inline;">Combinations computed</h3
+            > (<span x-text="perms[0] === '' ? 0 : perms.length"></span>)
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <template x-if="perms[0] === ''">
+              <div>No input</div>
+            </template>
+            <template x-for="n in perms">
+              <div><span x-text="n"></span></div>
+            </template>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="https://unpkg.com/alpinejs">
+    </script>
+    <script>
+      let words = undefined;
+      fetch('./words_alpha.txt')
+        .then(data => data.text())
+        .then(text => words = text.split("\n").map(line => line.trim()));
+
+      // O(n!) WARNING!!!
+        function permute(text) {
+          function permute_inner(cur, acc, acc2) {
+            let n = cur.length;
+            if (n === 0) {
+              acc2.set(acc, 0);
+              return;
+            }
+            for (let i = 0; i < n; i += 1)
+              permute_inner(cur.slice(0, i) + cur.slice(i+1, n), acc + cur.at(i), acc2);
+          }
+
+          let perms = new Map();
+          permute_inner(text, "", perms);
+
+          let ret = new Array();
+          for (let p of perms.keys()) {
+            if (words.includes(p))
+              ret.push(p);
+          }
+          return [Array.from(perms.keys()), ret];
+        }
+    </script>
+  </body>
+</html>
