@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="about:blank">
-    <title>I need a name</title>
+    <title>Slow software</title>
     <style>
 :root {
   color-scheme: light dark;
@@ -41,15 +41,15 @@ p {
       <header>
         <h1 style="margin-block-end: 1.5rem;">Slow software</h1>
       </header>
-      <main style="display: flex; flex-direction: column; gap: 1.5rem;" x-data="{name: '', perms: [''], words: ['']}">
+      <main style="display: flex; flex-direction: column; gap: 1.5rem;" x-data="{search: '', perms: [''], words: ['']}">
         <p>I know you like slow software. This page will help you feel it yet
         again. <strong>Whatever you enter in the following input field might
           kill the browser tab,</strong> especially if it's more than 8 characters.
         In case the browser freezes so badly, just close it.</p>
         <div style="display: flex">
           <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-            <label for="name">Search word</label>
-            <input style="padding: 0.25rem; margin-block-end: 0.25rem;" id="name" type="text" x-model="name" x-on.debounce.420ms:input="[perms, words] = permute($event.target.value);">
+            <label for="search">Search word</label>
+            <input style="padding: 0.25rem; margin-block-end: 0.25rem;" id="search" type="text" x-model="search" x-on.debounce.420ms:input="[perms, words] = permute($event.target.value);">
           </div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
